@@ -28,11 +28,12 @@ class Ranking:
             
 
     # perguntar para o ugo, int isnt subscriptable(typeError)
-    # def __str__(self):
-    #     string = ""
-    #     for highscore in self.high_scores:
-    #         string += "{} - {} \n".format(highscore[0],str(highscore[1]))
-    #     return string
+    def __str__(self):
+        string = ""
+
+        for highscore in self.high_scores:
+            string += "{} - {} \n".format(highscore[0],str(highscore[1]))
+        return string
 
  
 
@@ -47,8 +48,8 @@ def socketHandle(client_sock,addr):
         if  token[0].upper() == 'END':
             break
         elif token[0].upper() == 'RANKING':
-            print(" {} pediu rank".format(addr))
-            client_sock.send("Ranking ta top".encode('utf-8'))
+            print("OK - {} Pediu Rank".format(addr))
+            client_sock.send(("\nRanking Geral\n\n{}\n\n".format(rank)).encode('utf-8'))
         elif token[0].upper() == 'NOME':
             print("{} chama-se {}".format(addr[0],token[1]))
             client_sock.send("SEU NOME É : {}".format(token[1]).encode('utf-8'))
@@ -72,14 +73,17 @@ def socketHandle(client_sock,addr):
             elif(max(pontuacoes)==5):
                 score=1000
 
-            lock_ranking.acquire()
-            
-            highscore = (nome.upper(),score)
-            rank.add_highscore(highscore)
+            if score!=0:
+                lock_ranking.acquire()
+                
+                highscore = (nome.upper(),score)
+                rank.add_highscore(highscore)
 
-            lock_ranking.release()
+                lock_ranking.release()
+            else:
+                pass
 
-            response= "Nome: {} Dados: {} Pontuação: {}\n".format(nome,numeros,score)
+            response= "\n\nResultado da Partida\nDados Sorteados: {} Sua Pontuação: {}\n".format(numeros,score)
             print(response)
             client_sock.send(response.encode('utf-8'))
 
@@ -118,7 +122,3 @@ if __name__ == '__main__':
             pass
         else:
             print("Opção Inválida!")
-
-    
-        
-        
