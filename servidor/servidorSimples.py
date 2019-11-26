@@ -4,7 +4,7 @@ import random
 import sys
 
 HOST ='0.0.0.0'
-PORT = 1113
+PORT = 1112
 BUFSIZ = 1024
 ADDR = (HOST, PORT)
 lock_ranking = Lock()
@@ -25,6 +25,11 @@ class Ranking:
                 presente = True
         if(not presente):
             self.high_scores.append(highscore_novo)
+        self.sort()
+
+    def sort(self):
+        self.high_scores.sort(key=lambda tup: tup[1], reverse=True)
+        
             
 
     # perguntar para o ugo, int isnt subscriptable(typeError)
@@ -32,7 +37,7 @@ class Ranking:
         string = ""
 
         for highscore in self.high_scores:
-            string += "{} - {} \n".format(highscore[0],str(highscore[1]))
+            string += "{}\t{} \n".format(str(highscore[1]),highscore[0])
         return string
 
  
@@ -84,7 +89,7 @@ def socketHandle(client_sock,addr):
                 pass
 
             response= "\n\nResultado da Partida\nDados Sorteados: {} Sua Pontuação: {}\n".format(numeros,score)
-            print(response)
+            # print(response)
             client_sock.send(response.encode('utf-8'))
 
         
@@ -104,6 +109,7 @@ if __name__ == '__main__':
     server_socket.setsockopt( socket.SOL_SOCKET,socket.SO_REUSEADDR,1)
     rank = Ranking()
     
+    
     while True:
         opt = input("Configuração do servidor!\nDigite 1 para executar usando Threads, ou 2 para Processos.")
         if (opt == '1'):
@@ -114,7 +120,7 @@ if __name__ == '__main__':
                 client_sock, addr = server_socket.accept()
                 t1 = Thread(target=socketHandle,args=(client_sock,addr))
                 t1.start()
-                t1.join()
+               
 
             pass
         elif(opt == '2'):
