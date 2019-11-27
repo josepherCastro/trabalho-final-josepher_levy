@@ -4,7 +4,7 @@ import random
 import sys
 
 HOST ='0.0.0.0'
-PORT = 1112
+PORT = 1113
 BUFSIZ = 1024
 ADDR = (HOST, PORT)
 lock_ranking = Lock()
@@ -32,7 +32,7 @@ class Ranking:
         
             
 
-    # perguntar para o ugo, int isnt subscriptable(typeError)
+    # perguntar para o hugo, int isnt subscriptable(typeError)
     def __str__(self):
         string = ""
 
@@ -57,7 +57,7 @@ def socketHandle(client_sock,addr):
             client_sock.send(("\nRanking Geral\n\n{}\n\n".format(rank)).encode('utf-8'))
         elif token[0].upper() == 'NOME':
             print("{} chama-se {}".format(addr[0],token[1]))
-            client_sock.send("SEU NOME É : {}".format(token[1]).encode('utf-8'))
+            
             nome = token[1]
             numeros = []
             for x in range(5):
@@ -88,8 +88,8 @@ def socketHandle(client_sock,addr):
             else:
                 pass
 
-            response= "\n\nResultado da Partida\nDados Sorteados: {} Sua Pontuação: {}\n".format(numeros,score)
-            # print(response)
+            response= "\n\nResultado da Partida\nDados Sorteados: {} \nPontuação: {}\n".format(numeros,score)
+            print(numeros)
             client_sock.send(response.encode('utf-8'))
 
         
@@ -116,7 +116,7 @@ if __name__ == '__main__':
             # threads
             while True:
                 print("rank: {}\n".format(rank.high_scores))
-                print('Server waiting for connection...')
+                print('Server waiting for connection...{}'.format(PORT))
                 client_sock, addr = server_socket.accept()
                 t1 = Thread(target=socketHandle,args=(client_sock,addr))
                 t1.start()
