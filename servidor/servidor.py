@@ -12,10 +12,12 @@ lock_ranking = Lock()
 
 class Ranking:
     
-    def __init__(self):
+    def __init__(self,lock):
         self.high_scores = []
+        self.lock = lock
     
     def add_highscore(self,highscore_novo):
+        self.lock.acquire()
         presente = False
         for highscore in self.high_scores:
             if(highscore[0] == highscore_novo[0]):
@@ -26,6 +28,7 @@ class Ranking:
         if(not presente):
             self.high_scores.append(highscore_novo)
         self.sort()
+        self.lock.release()
 
     def sort(self):
         self.high_scores.sort(key=lambda tup: tup[1], reverse=True)
@@ -79,14 +82,10 @@ def socketHandle(client_sock,addr):
                 score=1000
 
             if score!=0:
-                lock_ranking.acquire()
-                
+
                 highscore = (nome.upper(),score)
                 rank.add_highscore(highscore)
 
-                lock_ranking.release()
-            else:
-                pass
 
             response= "\n\nResultado da Partida\nDados Sorteados: {} \nPontuação: {}\n".format(numeros,score)
             print(numeros)
@@ -107,7 +106,7 @@ if __name__ == '__main__':
     server_socket.bind(ADDR)
     server_socket.listen(5)
     server_socket.setsockopt( socket.SOL_SOCKET,socket.SO_REUSEADDR,1)
-    rank = Ranking()
+    rank = Ranking(lock_ranking)
     
     
     while True:
