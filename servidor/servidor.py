@@ -5,7 +5,7 @@ import sys
 from multiprocessing import Process,Queue
 
 HOST ='0.0.0.0'
-PORT = 1113
+PORT = 5000
 BUFSIZ = 1024
 ADDR = (HOST, PORT)
 lock_ranking = Lock()
