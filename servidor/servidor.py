@@ -135,7 +135,7 @@ if __name__ == '__main__':
             # threads
             while True:
                 print("rank: {}\n".format(rank.high_scores))
-                print('Server waiting for connection...{}'.format(PORT))
+                print('Server waiting for connection...{}'.format(ADDR))
                 client_sock, addr = server_socket.accept()
                 t1 = Thread(target=socketHandle,args=(client_sock,addr, False))
                 t1.start()
