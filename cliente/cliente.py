@@ -3,8 +3,8 @@ import os
 import socket
 
 if __name__ == "__main__":
-    HOST = 'localhost'
-    PORT = input('Digite a porta do servidor:')
+    HOST = input('Digite o endereço do Servidor:')
+    PORT = input('Digite a porta do Servidor:')
     BUFSIZ = 4096
     ADDR = (HOST,int(PORT))
 
